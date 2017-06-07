@@ -25,7 +25,7 @@ def CreateBlastDatabase(HLAReferenceFilename):
 def createOutputFile(outputfileName):
     tempDir, tempFilename = split(outputfileName)
     if not os.path.isdir(tempDir):
-        os.mkdir(tempDir)
+        os.makedirs(tempDir)
     resultsOutput = open(outputfileName, 'w')
     return resultsOutput
 
@@ -347,7 +347,8 @@ def BlastMinionReadsAgainstGroupwiseReference():
 
 
 
-    
+    # TODO: I should detecte forward/reverse matches, and revcom th e sqeuence.  
+    # I have code to revcom the sequence in search_barcode
 def BlastMinionReadsAgainstAPDRef():
     print ('Time to sort our MinION Reads.  Compare against the APD Allele Reference.')
     
