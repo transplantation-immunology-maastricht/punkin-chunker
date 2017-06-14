@@ -31,7 +31,7 @@ class Blast_Result_Set:
         self.AssignedAlleleGroup = '-1'
         foundGenes = self.uniqueGenes()       
         
-        print('Length of Found Genes:' + str(len(foundGenes)))
+        #print('Length of Found Genes:' + str(len(foundGenes)))
         
         if(len(foundGenes) != 1):
             # No match found.  

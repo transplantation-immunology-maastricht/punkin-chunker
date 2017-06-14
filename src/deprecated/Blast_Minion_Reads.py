@@ -1,3 +1,8 @@
+# This file is now deprecated and slated to be deleted.
+# Don't add code here anymore. put it in punkin_chunker instead.
+
+
+
 import sys
 import os
 import subprocess
@@ -525,18 +530,6 @@ def BlastMinionReadsAgainstAPDRef():
     #print('Executing canu alignment script.')
     #subprocess.call(CanuOutputFileName, shell=True)
 
-if __name__=='__main__':
-    try:
-        #BlastMinionReadsAgainstGroupwiseReference()
-        BlastMinionReadsAgainstAPDRef()
-        print('Done.  Yay.')
-
-    except Exception:
-        # Top Level exception handling like a pro.
-        # This is not really doing anything.
-        print 'Unexpected problem during execution:'
-        print sys.exc_info()[1]
-        raise
 
 
 
