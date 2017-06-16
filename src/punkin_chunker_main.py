@@ -38,17 +38,19 @@ def readArgs():
     global outputResultDirectory
     global sampleID
     global sortReference
+    global threadCount
             
     readInput                = None
     outputResultDirectory    = None
     sampleID                 = None
     sortReference            = None
+    threadCount              = None
 
     # https://www.tutorialspoint.com/python/python_command_line_arguments.htm
     try:
         opts, args = getopt.getopt(sys.argv[1:]
-            ,"hvo:r:R:s:"
-            ,["help", "version", "outputdir=", "reads=", "reference=", "sampleid="])
+            ,"hvo:r:R:s:t:"
+            ,["help", "version", "outputdir=", "reads=", "reference=", "sampleid=", "threads="])
 
         for opt, arg in opts:
 
@@ -72,6 +74,9 @@ def readArgs():
             elif opt in ("-s", "--sampleid"):
                 sampleID = arg
                 
+            elif opt in ("-t", "--threads"):
+                threadCount = arg
+                
             else:
                 print('Unknown Commandline Option:' + str(opt) + ':' + str(arg))
                 raise Exception('Unknown Commandline Option:' + str(opt) + ':' + str(arg))
@@ -89,6 +94,10 @@ def readArgs():
 
     
     # Sanity Checks    
+    
+    # default 1 thread
+    if threadCount is None:
+        threadCount = 1
 
     
     # This output directory should exist
@@ -111,7 +120,7 @@ if __name__=='__main__':
                 print ('Read input is a file that exists.')
             elif (isdir(readInput)):
                 print ('Read input is a directory that exists.')
-                sortDirectory(readInput, outputResultDirectory, sortReference)
+                sortDirectory(readInput, outputResultDirectory, sortReference, threadCount)
             else :
                 print ('I don\'t understand the read input specified, it is not a file or directory:' + readInput)
                 raise Exception('Bad Read Input Format')

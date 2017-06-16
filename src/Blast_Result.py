@@ -1,15 +1,24 @@
 class Blast_Result:
-    NomenclatureFields = []
-    BlastScore = 0
-    Gene = ''
-    
     def __init__(self):
         self.NomenclatureFields = []
         self.BlastScore = 0
-        self.Gene = ''
+        self.Gene = None
+        self.ForwardMatch = True
+        self.readRecord = None
+        
+        
+        
+                    
+    def processBlastRecord(self, blastRecord):
+        #self.readRecord = blastRecord
+        blastRecordFrame = blastRecord.alignments[0].hsps[0].frame
+        self.ForwardMatch = (blastRecordFrame[0] == blastRecordFrame[1])
+        self.parseNomenclatureLine(blastRecord.descriptions[0].title)
+        self.BlastScore = blastRecord.descriptions[0].score
+        #self.ForwardMatch = matchIsForwardDirection
     
     def parseNomenclatureLine(self, alleleNameLine):
-        # "> HLA-A*02:197 (X2 SIM-I2 X3)"
+        # "gnl|BL_ORD_ID|10 HLA-A*31:01:02:01 (X2 I2 X3)"
         #print('Parsing Nomenclature Line:' + alleleNameLine)
         nomenclatureFields = []
         
@@ -33,15 +42,4 @@ class Blast_Result:
             nomenclatureFields.append(nomenclatureFieldToken)
         
         self.NomenclatureFields = nomenclatureFields
-        
-    def parseScoreLine(self, scoreLine):
-        # It looks like this:
-        # " Score = 1110 bits (601),  Expect = 0.0"
-        #print ('Parsing a score line:' + scoreLine)        
-        line = ' '.join(scoreLine.split())
-        #print ('Line:' + line)
-        scoreTokens = line.split(' ')        
-        scoreToken = scoreTokens[2]
-        #print('Found this score token:' + scoreToken)
-        self.BlastScore = float(scoreToken)
-
+ 
