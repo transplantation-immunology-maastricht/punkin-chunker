@@ -8,7 +8,7 @@ from os import makedirs
 from Bio import SeqIO
 from Blast_Result import Blast_Result
 #from Blast_Result_Set import Blast_Result_Set
-from Bio.Blast.Applications import NcbiblastnCommandline
+#from Bio.Blast.Applications import NcbiblastnCommandline
 import operator
 from Bio.Blast import NCBIXML
 import StringIO
@@ -141,7 +141,7 @@ def sortMinIONReadsByGene(inputFilename, outputDirectory, HLAReferenceFilename, 
     # This loop processes each batch of reads indivudually
     # TODO: Add some threading to this.
     for batchIndex, readBatch in enumerate(readBatches):
-        print 'Sorting Batch # (' + str(batchIndex + 1) + '/' + str(len(readBatches)) + ') ' + datetime.datetime.now()
+        print 'Sorting Batch # (' + str(batchIndex + 1) + '/' + str(len(readBatches)) + ') ' + str(datetime.datetime.now())
         
         currentResults = sortReadArrayByGene(readBatch, HLAReferenceFilename, threadCount)
         
@@ -270,8 +270,8 @@ def parseXMLForBlastResults(readRecords, blastXMLText):
         currentBlastResult.readRecord = readRecords[blastRecordIndex]
         
         if(len(blastRecord.alignments) < 1):
-            print ('No alignments detected for this read. This is not a problem.')
-      
+            #print ('No alignments detected for this read. This is not a problem.')
+            pass
         else:
             currentBlastResult.processBlastRecord(blastRecord)
                     
