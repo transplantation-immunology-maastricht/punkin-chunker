@@ -8,7 +8,7 @@ from os import makedirs
 from Bio import SeqIO
 from Blast_Result import Blast_Result
 #from Blast_Result_Set import Blast_Result_Set
-#from Bio.Blast.Applications import NcbiblastnCommandline
+from Bio.Blast.Applications import NcbiblastnCommandline
 import operator
 from Bio.Blast import NCBIXML
 import StringIO
@@ -235,35 +235,18 @@ def sortReadArrayByGene(minionReadRecordList, HLAReferenceFilename, threadCount)
 
     return blastResultSet 
 
-# A method to print information about blast alignments.
-# I think this method is unneccsary. It just prints alignment stuff from
-# the blast xml
+
 
            
 
 def parseXMLForBlastResults(readRecords, blastXMLText):
-    
-    #print('parsing xml:')
-    #print('Length readREcords =' + str(len(readRecords)))
-    
-    
-    # pause statement for debugging...
-    #wait = raw_input("\n\n\n\n**************************PRESS ENTER TO CONTINUE.**************************\n\n\n\n")
-
     #Parse XML for blast results. Need a File handle first.
     xmlStringHandle = StringIO.StringIO(blastXMLText)    
     blastRecords = NCBIXML.parse(xmlStringHandle)
     
-    #print ('After Blast:')
-    #print ('Length readRecords:' + str(len(readRecords)))
-    #print ('Length blastRecords:' + str(len(blastRecords)))
-
     blastResults = []
     
     # parse returns multiple blast results.
-    # Right now Im blasting one read at a time.  
-    # I can use parse if I somehow feed multiple
-    # reads to BLAST (which I should, I'm sure blast is efficienter than me))
     for blastRecordIndex, blastRecord in enumerate(blastRecords):  
         
         currentBlastResult = Blast_Result()   
@@ -272,11 +255,13 @@ def parseXMLForBlastResults(readRecords, blastXMLText):
         if(len(blastRecord.alignments) < 1):
             #print ('No alignments detected for this read. This is not a problem.')
             pass
+
         else:
             currentBlastResult.processBlastRecord(blastRecord)
                     
         blastResults.append(currentBlastResult)  
 
+    #print ('Returning Blast Results. Out of ' + str(len(readRecords)) + ' reads i found ' + str(len(blastResults)) +  ' blast result records.')
 
     return blastResults
 
@@ -330,11 +315,13 @@ def writeSortedReadsToFile(blastResults, outputDirectory, finalBlastSummaryOutpu
 
     for resultIndex, currentBlastResult in enumerate(blastResults):
         
-        if(currentBlastResult is None):
+        
+        # if nomenclature fields is empty, this blast result was not assigned to a gene.
+        if(len(currentBlastResult.NomenclatureFields) < 1):
             # This corresponds to if there was no blast results for this read. 
             unsortedReadCount += 1
             SeqIO.write([currentBlastResult.readRecord], unsortedReadOutputFile, FileOutputFormat)
-            raise Exception('This read was unsorted.  No problem, but I wanted to see when this happens. Delete this exception.')
+            #raise Exception('This read was unsorted.  No problem, but I wanted to see when this happens. Delete this exception.')
                
         else:
             currentGene = currentBlastResult.Gene
